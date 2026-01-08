@@ -14,7 +14,7 @@ export function BioLinks() {
         <span>Print CV</span>
       </a>
       <a
-        href="https://linkedin.com"
+        href="https://www.linkedin.com/in/gaetan-pelletey/"
         target="_blank"
         rel="noopener noreferrer"
         className="flex items-center gap-2 text-gray-700 hover:text-black transition-colors"
