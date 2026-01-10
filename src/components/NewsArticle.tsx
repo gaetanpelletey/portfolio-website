@@ -11,7 +11,7 @@ interface NewsArticleProps {
 export function NewsArticle({ article, onClose }: NewsArticleProps) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start justify-center overflow-y-auto pt-20 pb-8">
-      <div className="bg-white w-full max-w-4xl rounded-lg shadow-xl mx-4 relative">
+      <div className="bg-white w-full max-w-4xl shadow-xl mx-4 relative">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
@@ -22,7 +22,7 @@ export function NewsArticle({ article, onClose }: NewsArticleProps) {
         <img
           src={article.image}
           alt={article.title}
-          className="w-full h-64 object-cover rounded-t-lg"
+          className="w-full h-64 object-cover"
         />
         
         <div className="p-8">
