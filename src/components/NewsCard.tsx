@@ -10,7 +10,7 @@ interface NewsCardProps {
 export function NewsCard({ item, onClick }: NewsCardProps) {
   return (
     <div 
-      className="bg-white rounded-lg overflow-hidden cursor-pointer transform transition-transform duration-300 hover:-translate-y-1"
+      className="bg-white overflow-hidden cursor-pointer transform transition-transform duration-300 hover:-translate-y-1"
       onClick={onClick}
     >
       <img
