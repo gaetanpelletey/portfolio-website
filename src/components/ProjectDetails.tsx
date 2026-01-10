@@ -7,6 +7,7 @@ import { MetadataItem } from './MetadataItem';
 import { ProjectSocialLinks } from './ProjectSocialLinks';
 import { ProjectGallery } from './ProjectGallery';
 import { ProjectSection } from './ProjectSection';
+import { Lightbox } from './Lightbox';
 import { useTranslation } from '../hooks/useTranslation';
 import type { Project, ProjectContent } from '../hooks/useGitHubData';
 
@@ -21,9 +22,67 @@ export function ProjectDetails({
 }: ProjectDetailsProps) {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
+  const [lightboxOpen, setLightboxOpen] = React.useState(false);
+  const [currentLightboxImageIndex, setCurrentLightboxImageIndex] = React.useState(0);
 
   const project = projects.find((p) => p.id === id);
   const details = id ? projectDetails[id] : undefined;
+
+  // Consolidate all project images for lightbox
+  const allProjectImages = React.useMemo(() => {
+    const images: { url: string; caption: string }[] = [];
+    
+    // Add cover image
+    if (project?.image) {
+      images.push({
+        url: project.image,
+        caption: `${project.title} - Cover Image`
+      });
+    }
+    
+    // Add gallery images
+    if (details?.gallery) {
+      images.push(...details.gallery);
+    }
+    
+    // Add section images
+    if (details?.sections) {
+      details.sections.forEach((section) => {
+        if (section.image) {
+          images.push({
+            url: section.image,
+            caption: `${section.title}`
+          });
+        }
+      });
+    }
+    
+    return images;
+  }, [project, details]);
+
+  const openLightbox = (imageIndex: number) => {
+    setCurrentLightboxImageIndex(imageIndex);
+    setLightboxOpen(true);
+  };
+
+  const openLightboxByUrl = (imageUrl: string) => {
+    const index = allProjectImages.findIndex(img => img.url === imageUrl);
+    if (index !== -1) {
+      openLightbox(index);
+    }
+  };
+
+  const openLightboxForGalleryImage = (galleryIndex: number) => {
+    // Calculate the actual index in allProjectImages
+    // Cover image is at index 0 (if it exists)
+    const coverImageOffset = project?.image ? 1 : 0;
+    const actualIndex = coverImageOffset + galleryIndex;
+    openLightbox(actualIndex);
+  };
+
+  const closeLightbox = () => {
+    setLightboxOpen(false);
+  };
 
   if (!project) {
     return (
@@ -51,7 +110,8 @@ export function ProjectDetails({
         <img
           src={project.image}
           alt={project.title}
-          className="w-full h-[600px] object-cover"
+          className="w-full h-[600px] object-cover cursor-pointer hover:opacity-90 transition-opacity"
+          onClick={() => openLightboxByUrl(project.image)}
         />
       </div>
 
@@ -99,7 +159,10 @@ export function ProjectDetails({
 
       {details && (
         <div className="mt-24">
-          <ProjectGallery images={details.gallery} />
+          <ProjectGallery 
+            images={details.gallery} 
+            onImageClick={openLightboxForGalleryImage}
+          />
 
           {details.sections.map((section, index) => (
             <ProjectSection
@@ -108,6 +171,7 @@ export function ProjectDetails({
               content={section.content}
               image={section.image}
               imagePosition={section.imagePosition}
+              onImageClick={openLightboxByUrl}
             />
           ))}
         </div>
@@ -123,6 +187,14 @@ export function ProjectDetails({
         <RelatedProjects currentProjectId={project.id} />
         <ProjectSocialLinks />
       </div>
+
+      {lightboxOpen && allProjectImages.length > 0 && (
+        <Lightbox
+          images={allProjectImages}
+          initialIndex={currentLightboxImageIndex}
+          onClose={closeLightbox}
+        />
+      )}
     </div>
   );
 }
