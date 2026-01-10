@@ -4,17 +4,17 @@ import { LanguageSwitcher } from './LanguageSwitcher';
 import { useTranslation } from '../hooks/useTranslation';
 
 const getTitleFromPath = (pathname: string, t: (key: string) => string): string => {
+  // Check if we're on projects page or any project detail page
+  if (pathname === '/projects' || pathname.startsWith('/projects/')) {
+    return t('nav.projects');
+  }
+  
   switch (pathname) {
-    case '/projects':
-      return t('nav.projects');
     case '/news':
       return t('nav.news');
     case '/biography':
       return t('nav.biography');
     default:
-      if (pathname.startsWith('/projects/')) {
-        return t('projectDetails.title');
-      }
       return '';
   }
 };

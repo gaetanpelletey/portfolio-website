@@ -7,7 +7,7 @@ export function Biography() {
       <div className="h-[calc(100%-6rem)] max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
         <div className="h-[90%] mx-auto w-[90%]">
           <img
-            src="/src/images/bio/Gaetan.JPG"
+            src="https://raw.githubusercontent.com/gaetanpelletey/portfolio-website/main/src/images/bio/Gaetan.JPG"
             alt="Gaëtan Pelletey"
             className="w-full h-full object-cover"
           />
