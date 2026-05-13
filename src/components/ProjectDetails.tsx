@@ -31,7 +31,7 @@ export function ProjectDetails({
   // Consolidate all project images for lightbox
   const allProjectImages = React.useMemo(() => {
     const images: { url: string; caption: string }[] = [];
-    
+
     // Add cover image
     if (project?.image) {
       images.push({
@@ -39,12 +39,12 @@ export function ProjectDetails({
         caption: `${project.title} - Cover Image`
       });
     }
-    
+
     // Add gallery images
     if (details?.gallery) {
       images.push(...details.gallery);
     }
-    
+
     // Add section images
     if (details?.sections) {
       details.sections.forEach((section) => {
@@ -56,7 +56,7 @@ export function ProjectDetails({
         }
       });
     }
-    
+
     return images;
   }, [project, details]);
 
@@ -73,8 +73,6 @@ export function ProjectDetails({
   };
 
   const openLightboxForGalleryImage = (galleryIndex: number) => {
-    // Calculate the actual index in allProjectImages
-    // Cover image is at index 0 (if it exists)
     const coverImageOffset = project?.image ? 1 : 0;
     const actualIndex = coverImageOffset + galleryIndex;
     openLightbox(actualIndex);
@@ -82,6 +80,31 @@ export function ProjectDetails({
 
   const closeLightbox = () => {
     setLightboxOpen(false);
+  };
+
+  const renderShapeDiver = () => {
+    if (!details?.shapediver?.url) return null;
+
+    return (
+      <div className="my-24 w-full">
+        {details.shapediver.caption && (
+          <p className="text-sm text-gray-500 mb-4 text-center">
+            {details.shapediver.caption}
+          </p>
+        )}
+
+        <iframe
+          src={details.shapediver.url}
+          style={{
+            width: "100%",
+            height: `${details.shapediver.height || 800}px`,
+            border: "none"
+          }}
+          loading="lazy"
+          allowFullScreen
+        />
+      </div>
+    );
   };
 
   if (!project) {
@@ -174,6 +197,9 @@ export function ProjectDetails({
               onImageClick={openLightboxByUrl}
             />
           ))}
+
+          {/* ShapeDiver computational block */}
+          {renderShapeDiver()}
         </div>
       )}
 
